@@ -1,0 +1,115 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+* {margin:0; padding:0; }
+li{list-style:none; }
+
+#div1 {width:850px; height:500px; margin:50px auto; overflow:hidden; position:relative;}
+#div1 ul li{height:500px;opacity: 0;position: absolute;left: 0;top: 0;z-index: 0;transition: opacity 1.5s;}
+#div1 ul li.ac{z-index: 5;opacity: 1;}
+#div1 ol {position:absolute;right: 10%;bottom: 10px;z-index:6}
+#div1 ol li{width: 20px;height: 20px;background: #fff;margin-left: 5px;float: left;line-height: 20px;text-align: center;cursor: pointer;}
+#div1 ol li.ac{background: red;color: #fff;}
+#div1>a{text-decoration: none;position: absolute;top: 50%;margin-top: -10px;height: 40px;line-height: 32px;text-align: center;width: 40px;font-size: 40px;vertical-align: middle;color: #fff;background: rgba(0,0,0,0.5);z-index:6;}
+#goPrev{left: 0;}
+#goNext{right: 0;}
+img{width:850px; height:500px;}
+</style>
+</head>
+
+<body>
+<div id="div1">
+	<ul>
+		
+    	<li class="ac"><a href="javascript:alert(0);"><img src="img/1.jpg" /></a></li>
+    	<li><a href="javascript:alert(1);"><img src="img/2.jpg" /></a></li>
+    	<li><a href="javascript:alert(2);"><img src="img/3.jpg" /></a></li>
+    	<li><a href="javascript:alert(3);"><img src="img/4.jpg" /></a></li>
+    	<li><a href="javascript:alert(4);"><img src="img/5.jpg" /></a></li>
+    </ul>
+    <ol>
+    	
+    </ol>
+    <a href="javascript:;" id="goPrev">&laquo;</a>
+    <a href="javascript:;" id="goNext">&raquo;</a>
+</div>
+<script>
+    var div1=document.querySelector("#div1");
+	var lis=document.querySelectorAll("li");
+	var btns=[];
+	var ol=document.querySelector("ol");
+	var index=0;//记录当前的索引
+	var lastIndex=0;//记录上一次点击的索引
+	var goNext=document.querySelector("#goNext");
+	var goPrev=document.querySelector("#goPrev");
+	var timer="";
+	for(var i=0;i<lis.length;i++)
+	{
+		var li=document.createElement("li");
+		li.innerHTML=i+0;
+	    ol.appendChild(li);	
+	    //将li放在空数组中btns
+	    btns.push(li);
+	    btns[0].className="ac";
+	}
+	//给每个li注册点击事件
+	for(let i=0;i<btns.length;i++)
+	{
+		btns[i].onclick=function(){
+			index=i;
+			changeImg();
+			lastIndex=index;
+		}
+	}
+	
+	 goNext.onclick=function(){
+	 	
+	 	if(++index==lis.length)
+	 	{
+	 		index=0;
+	 	}
+	 	changeImg();
+	 	lastIndex=index;
+	 }
+	goPrev.onclick=function(){
+	 	
+	 	if(--index<0)//可以等于0第一张图片
+	 	
+	 	{
+	 		index=lis.length-1;
+	 	}
+	 	changeImg();
+	 	lastIndex=index;
+	 }
+	//自动播放
+	zd();
+	//鼠标进入的时候的让自动播放停止
+	div1.onmouseenter=function(){
+		clearInterval(timer);
+	}
+	//鼠标离开的时候开启定时器
+	div1.onmouseleave=function(){
+		zd();
+	}
+	function zd(){
+		timer=setInterval(function(){
+		 goNext.onclick();
+		
+	},2000);
+	}
+	//封装成函数
+	function changeImg(){
+			btns[lastIndex].classList.remove("ac");
+			lis[lastIndex].classList.remove("ac");
+			//为当前点击的li添加ac
+			btns[index].classList.add("ac");
+			lis[index].classList.add("ac");
+	}
+	
+</script>
+</body>
+</html>
